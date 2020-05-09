@@ -5,8 +5,10 @@ Require Import Coq.Arith.PeanoNat.
 Require Import Coq.Lists.List.
 Require Import Coq.Relations.Relations.
 Require Import Coq.Classes.RelationClasses.
-Require Import Coq.quote.Quote.
+Require Import Coq.Strings.String.
 Require Import Coq.Wellfounded.Lexicographic_Product.
+
+Require Import FrapLike.
 
 Generalizable All Variables.
 
@@ -218,7 +220,12 @@ Proof.
   try (rewrite e0 || rewrite <- e0);
   try congruence;
   try rewrite <- Eqdep_dec.eq_rect_eq_dec; eauto; simpl; intuition;
-  try rewrite <- Eqdep_dec.eq_rect_eq_dec; eauto; simpl; intuition.
+  try rewrite <- Eqdep_dec.eq_rect_eq_dec; eauto; simpl; intuition;
+  match goal with 
+  | H: Var ?X = Var ?Y |- _ => rewrite H
+  | H: Join ?W ?X = Join ?Y ?Z |- _ => rewrite H
+  | H: Meet ?W ?X = Meet ?Y ?Z |- _ => rewrite H
+  end; simpl; propositional.
 Qed.
 
 Program Instance Subterm_Irreflexive : Irreflexive Subterm.
